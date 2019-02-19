@@ -1,8 +1,8 @@
 import praw
+from secrets import CLIENT_ID, CLIENT_SECRET
 
-
-reddit = praw.Reddit(client_id='U3c5VG-B0wgeEA',
-                     client_secret='ZxjowE_k5Nsi8CT617Ze-uYL0EE',
+reddit = praw.Reddit(client_id=CLIENT_ID,
+                     client_secret=CLIENT_SECRET,
                      user_agent='desktop:myredditapp:v0.0.1 (by /u/clamchowderpowder)',)
 
 print(reddit.read_only)  # Output: False

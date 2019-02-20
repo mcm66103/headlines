@@ -21,6 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', reddit_views.home, name='home'),
     path('<subreddit>/add/', reddit_views.add_keywords),
-    path('<subredddit>/<keyword>/', reddit_views.keyword_detail),
+    path('<subreddit>/<keyword>/', reddit_views.keyword_detail),
     path('<subreddit>/', reddit_views.dashboard),
 ]

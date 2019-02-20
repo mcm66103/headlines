@@ -1,0 +1,8 @@
+<h1>{{ keyword }}</h1>
+<p>Appears in:</p>
+<ul>
+    {% for keyword_instance in keyword_instances %}
+    <li><a href="{% for associated_post in keyword_instance.associated_post.all %}{{ associated_post.url }}">
+        {{ associated_post.title }}</a> on {{ associated_post.date }}{% endfor %}</li>
+    {% endfor %}
+</ul>

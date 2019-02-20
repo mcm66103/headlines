@@ -19,7 +19,7 @@ class RedditPost(models.Model):
 
 class Keyword(models.Model):
     word = models.CharField(max_length=255)
-    associated_post = models.ManyToManyField(RedditPost)
+    associated_post = models.ManyToManyField(RedditPost, related_name='associated_post')
 
     def __str__(self):
         return self.word

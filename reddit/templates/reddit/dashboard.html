@@ -1,0 +1,6 @@
+<h1>/r/{{ subreddit }}</h1>
+<ul>
+    {% for keyword in top_keywords %}
+    <li><a href="/{{ subreddit }}/{{ keyword.0 }}/">{{ keyword.0 }}</a>: {{ keyword.1 }}</li>
+    {% endfor %}
+</ul>

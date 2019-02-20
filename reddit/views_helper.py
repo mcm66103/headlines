@@ -1018,20 +1018,22 @@ def get_submissions(subreddit, limit):
                          client_secret=CLIENT_SECRET,
                          user_agent='desktop:myredditapp:v0.0.1 (by /u/clamchowderpowder)',)
 
-    sleep(3)
+    sleep(1)
     return reddit.subreddit(subreddit).new(limit=limit)
 
 def save_submissions(submissions):
     for submission in submissions:
-        new_submission = RedditPost()
-        new_submission.title = submission.title
-        new_submission.score = submission.score
-        new_submission.url = submission.url
-        new_submission.id = submission.id
-        new_submission.selftext = submission.selftext
-        new_submission.subreddit = submission.subreddit.display_name
-        print(str(new_submission.subreddit))
-        new_submission.save()
+        if not RedditPost.objects.get(id=submission.id).exists():
+            new_submission = RedditPost()
+            new_submission.title = submission.title
+            new_submission.score = submission.score
+            new_submission.url = submission.url
+            new_submission.id = submission.id
+            new_submission.selftext = submission.selftext
+            new_submission.subreddit = submission.subreddit.display_name
+            new_submission.date = datetime.utcfromtimestamp(submission.created_utc)
+            new_submission.save()
+
 
 
 def generate_keywords_from_post(reddit_post):
@@ -1048,9 +1050,9 @@ def generate_keywords_from_post(reddit_post):
             reddit_post.keywords_generated = True
             reddit_post.save()
 
-def get_top_keywords(timedelta, subreddit, limit):
+def get_top_keywords(mytimedelta, subreddit, limit, start_time = datetime.now):
     keyword_list = {}
-    matching_keywords = Keyword.objects.all().filter(associated_post__subreddit = subreddit, associated_post__date__gte= datetime.now() - timedelta)
+    matching_keywords = Keyword.objects.all().filter(associated_post__subreddit = subreddit, associated_post__date__gte= start_time - mytimedelta)
     print("Matching Keywords: %s " % matching_keywords.count())
     for keyword in matching_keywords:
         if keyword_list.get(keyword.word):

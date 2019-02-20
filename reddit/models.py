@@ -1,10 +1,6 @@
 from django.db import models
 # Create your models here.
-class Keyword(models.Model):
-    word = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.word
 
 
 class RedditPost(models.Model):
@@ -12,7 +8,18 @@ class RedditPost(models.Model):
     score = models.IntegerField()
     id = models.CharField(max_length=255, primary_key=True)
     url = models.URLField()
-    keywords = models.ManyToManyField(Keyword)
+    keywords_generated = models.BooleanField(default=False)
+    selftext = models.TextField()
+    subreddit = models.CharField(max_length=255)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+
+
+class Keyword(models.Model):
+    word = models.CharField(max_length=255)
+    associated_post = models.ManyToManyField(RedditPost)
+
+    def __str__(self):
+        return self.word

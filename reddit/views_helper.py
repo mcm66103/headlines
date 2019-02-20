@@ -1023,7 +1023,9 @@ def get_submissions(subreddit, limit):
 
 def save_submissions(submissions):
     for submission in submissions:
-        if not RedditPost.objects.get(id=submission.id).exists():
+        try:
+            test = RedditPost.objects.get(id=submission.id)
+        except Exception:
             new_submission = RedditPost()
             new_submission.title = submission.title
             new_submission.score = submission.score
@@ -1050,9 +1052,10 @@ def generate_keywords_from_post(reddit_post):
             reddit_post.keywords_generated = True
             reddit_post.save()
 
-def get_top_keywords(mytimedelta, subreddit, limit, start_time = datetime.now):
+
+def get_top_keywords(mytimedelta, subreddit, limit, start_time=datetime.now()):
     keyword_list = {}
-    matching_keywords = Keyword.objects.all().filter(associated_post__subreddit = subreddit, associated_post__date__gte= start_time - mytimedelta)
+    matching_keywords = Keyword.objects.all().filter(associated_post__subreddit=subreddit, associated_post__date__gte= start_time - mytimedelta)
     print("Matching Keywords: %s " % matching_keywords.count())
     for keyword in matching_keywords:
         if keyword_list.get(keyword.word):
@@ -1061,4 +1064,4 @@ def get_top_keywords(mytimedelta, subreddit, limit, start_time = datetime.now):
             keyword_list[keyword.word] = 1
     sorted_keyword_list = sorted(keyword_list.items(), key=operator.itemgetter(1))
     print(sorted_keyword_list)
-    return sorted_keyword_list[:limit]
+    return sorted_keyword_list.reverse()[:limit]

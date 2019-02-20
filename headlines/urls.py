@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from reddit import views as reddit_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', reddit_views.home, name='home'),
+    path('<subreddit>/add/', reddit_views.add_keywords),
+    path('<subredddit>/<keyword>/', reddit_views.keyword_detail),
+    path('<subreddit>/', reddit_views.dashboard),
 ]

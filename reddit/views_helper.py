@@ -1059,7 +1059,7 @@ def generate_keywords_from_post(reddit_post):
 
 def get_top_keywords(mytimedelta, subreddit, limit, start_time=datetime.now()):
     keyword_list = {}
-    matching_keywords = Keyword.objects.all().filter(associated_post__subreddit=subreddit, associated_post__date__gte=start_time - mytimedelta)
+    matching_keywords = Keyword.objects.all().filter(associated_post__subreddit=subreddit, associated_post__date__gte=start_time - mytimedelta, associated_post__date__lte=start_time)
     print("Matching Keywords: %s " % matching_keywords.count())
     for keyword in matching_keywords:
         if keyword_list.get(keyword.word):
@@ -1074,3 +1074,20 @@ def get_top_keywords(mytimedelta, subreddit, limit, start_time=datetime.now()):
 def get_keywords_by_keyword_and_subreddit(time_frame, keyword, subreddit, start_time=datetime.now()):
     keyword_instances = Keyword.objects.filter(word=keyword, associated_post__subreddit=subreddit, associated_post__date__gte=start_time - time_frame)
     return keyword_instances
+
+def calc_keyword_percent_change(recent_keyword_list, old_keyword_list):
+    chart_data = []
+    for recent_keyword in recent_keyword_list:
+        for old_keyword in old_keyword_list:
+            if recent_keyword[0] == old_keyword[0]:
+                chart_data.append((recent_keyword[0], percent_change(recent_keyword[1], old_keyword[1])))
+                print('Keyword "%s" has historical data' % recent_keyword[0])
+                print('period n: %s' % recent_keyword[1])
+                print('period n - 1: %s' % old_keyword[1])
+    chart_data.sort(key=lambda tup: abs(tup[1]))
+    print("chart_data: %s" % chart_data)
+
+    return chart_data
+
+def percent_change(new, old):
+    return (new - old) / old * 100

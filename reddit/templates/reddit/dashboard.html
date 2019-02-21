@@ -1,6 +1,52 @@
-<h1>/r/{{ subreddit }}</h1>
-<ul>
-    {% for keyword in top_keywords %}
-    <li><a href="/{{ subreddit }}/{{ keyword.0 }}/">{{ keyword.0 }}</a>: {{ keyword.1 }}</li>
-    {% endfor %}
-</ul>
+{% extends 'headlines/base.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1>/r/{{ subreddit }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Keyword list container -->
+        <div class="col-sm-2">
+            <ul>
+                {% for keyword in top_keywords %}
+                <li><a href="/{{ subreddit }}/{{ keyword.0 }}/">{{ keyword.0 }}</a>: {{ keyword.1 }}</li>
+                {% endfor %}
+            </ul>
+        </div><!-- End keyword list container -->
+        <!-- Keyword percent change graph -->
+        <div class="col-sm-10">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div><!-- End keyword percent change graph -->
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script>
+    $( document ).ready(function() {
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for data_point in chart_data %}"{{ data_point.0 }}",{% endfor %}],
+                datasets: [{
+                    label: 'percent change',
+                    data: [{% for data_point in chart_data %}{{ data_point.1 }},{% endfor %}],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

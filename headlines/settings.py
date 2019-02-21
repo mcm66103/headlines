@@ -57,6 +57,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             'reddit/templates',
+            'headlines/templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {

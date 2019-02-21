@@ -11,7 +11,7 @@ class RedditPost(models.Model):
     keywords_generated = models.BooleanField(default=False)
     selftext = models.TextField()
     subreddit = models.CharField(max_length=255)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField()
 
     def __str__(self):
         return self.title

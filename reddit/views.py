@@ -1,8 +1,11 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from .views_helper import get_top_keywords
 from django.shortcuts import render, redirect
 from .models import RedditPost
-from .views_helper import get_submissions, save_submissions, generate_keywords_from_post, get_keywords_by_keyword_and_subreddit
+from .views_helper import (
+    get_submissions, save_submissions, generate_keywords_from_post, get_keywords_by_keyword_and_subreddit,
+    calc_keyword_percent_change
+)
 
 time_frame_options = {
     "day": timedelta(days=1),
@@ -19,7 +22,10 @@ def dashboard(request, subreddit):
     time_frame = request.GET.get('time', 'week')
 
     context['top_keywords'] = get_top_keywords(time_frame_options[time_frame], subreddit, limit)
+    last_periods_top_keywords = get_top_keywords(time_frame_options[time_frame], subreddit, limit,
+                                                 start_time=datetime.now()-time_frame_options[time_frame])
 
+    context['chart_data'] = calc_keyword_percent_change(context['top_keywords'], last_periods_top_keywords)
     return render(request, 'reddit/dashboard.html', context)
 
 def add_keywords(request, subreddit):

@@ -1023,6 +1023,7 @@ def get_submissions(subreddit, limit):
 
 def save_submissions(submissions):
     for submission in submissions:
+
         try:
             test = RedditPost.objects.get(id=submission.id)
             print('title: "%s" already exists' % test.title)
